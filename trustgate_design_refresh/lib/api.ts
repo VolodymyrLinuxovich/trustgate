@@ -1,8 +1,13 @@
-import type { ApiCategory, RankingsResponse } from "@/types";
+import type { ApiCategory, ApiDetailResponse, RankingsResponse } from "@/types";
 
 export interface GetRankingsOptions {
   category: ApiCategory;
   taskType?: string;
+  baseUrl?: string;
+}
+
+export interface GetApiDetailOptions {
+  apiId: string;
   baseUrl?: string;
 }
 
@@ -39,4 +44,24 @@ export async function getRankings({
   }
 
   return (await response.json()) as RankingsResponse;
+}
+
+export async function getApiDetail({
+  apiId,
+  baseUrl
+}: GetApiDetailOptions): Promise<ApiDetailResponse> {
+  const response = await fetch(
+    buildRequestUrl(`/apis/${encodeURIComponent(apiId)}`, baseUrl),
+    {
+      headers: {
+        Accept: "application/json"
+      }
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Failed to load API detail (${response.status})`);
+  }
+
+  return (await response.json()) as ApiDetailResponse;
 }
