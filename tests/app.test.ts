@@ -355,6 +355,21 @@ describe("Trustgate API", () => {
     }
   });
 
+  it("returns 200 for API detail requests", async () => {
+    listReportsByApiId.mockResolvedValue([
+      makeReport({
+        timestamp: "2026-03-28T18:00:00Z"
+      })
+    ]);
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/apis/open-meteo-v1-forecast"
+    });
+
+    expect(response.statusCode).toBe(200);
+  });
+
   it("returns reviewCount in ranking items", async () => {
     const rankedApp = buildApp();
 
