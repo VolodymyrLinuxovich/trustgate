@@ -164,87 +164,109 @@ export default async function ApiDetailPage({ params }: ApiDetailPageProps) {
         </section>
 
         <section className="grid gap-4">
-          {detail.reviews.map((review, index) => (
-            <article key={`${review.timestamp}-${index}`} className="card-soft px-6 py-6">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="text-lg font-semibold text-white">
-                    {review.starScore} / 5 stars
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-400">
-                    {review.taskType}
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
-                  <span
-                    className={`badge border-0 ${
-                      review.success
-                        ? "bg-emerald-400/15 text-emerald-200"
-                        : "bg-rose-400/15 text-rose-200"
-                    }`}
-                  >
-                    {review.success ? "Success" : "Failure"}
-                  </span>
-                  <span className="badge bg-white/[0.02] text-slate-300">
-                    {formatReviewTimestamp(review.timestamp)}
-                  </span>
-                </div>
+          {detail.reviews.length === 0 ? (
+            <article className="card-soft px-6 py-8">
+              <p className="text-lg font-semibold text-white">
+                No reviews yet
+              </p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
+                Trustgate has not received any public call reports for this API
+                identity yet. The aggregate profile above stays visible so humans
+                can confirm the provider and endpoint while they wait for the
+                first real submission.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3 text-xs font-medium text-slate-300">
+                <span className="badge bg-white/[0.02] text-slate-200">
+                  Open submissions
+                </span>
+                <span className="badge bg-white/[0.02] text-slate-200">
+                  POST /reports
+                </span>
               </div>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Latency
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-white">
-                    {review.latencyMs} ms
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Rate limited
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-white">
-                    {review.rateLimited ? "Yes" : "No"}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Review category
-                  </p>
-                  <p className="mt-2 text-lg font-semibold text-white">
-                    {review.category}
-                  </p>
-                </div>
-              </div>
-
-              {review.agentName || review.sourceType ? (
-                <div className="mt-5 rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-                    Provenance
-                  </p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {review.agentName ? (
-                      <span className="badge bg-white/[0.03] text-slate-200">
-                        Agent: {review.agentName}
-                      </span>
-                    ) : null}
-                    {review.sourceType ? (
-                      <span className="badge bg-white/[0.03] text-slate-200">
-                        Source: {review.sourceType}
-                      </span>
-                    ) : null}
+            </article>
+          ) : (
+            detail.reviews.map((review, index) => (
+              <article key={`${review.timestamp}-${index}`} className="card-soft px-6 py-6">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <p className="text-lg font-semibold text-white">
+                      {review.starScore} / 5 stars
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-slate-400">
+                      {review.taskType}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                    <span
+                      className={`badge border-0 ${
+                        review.success
+                          ? "bg-emerald-400/15 text-emerald-200"
+                          : "bg-rose-400/15 text-rose-200"
+                      }`}
+                    >
+                      {review.success ? "Success" : "Failure"}
+                    </span>
+                    <span className="badge bg-white/[0.02] text-slate-300">
+                      {formatReviewTimestamp(review.timestamp)}
+                    </span>
                   </div>
                 </div>
-              ) : null}
 
-              {review.comment ? (
-                <p className="mt-5 rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4 text-sm leading-6 text-slate-300">
-                  {review.comment}
-                </p>
-              ) : null}
-            </article>
-          ))}
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      Latency
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {review.latencyMs} ms
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      Rate limited
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {review.rateLimited ? "Yes" : "No"}
+                    </p>
+                  </div>
+                  <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      Review category
+                    </p>
+                    <p className="mt-2 text-lg font-semibold text-white">
+                      {review.category}
+                    </p>
+                  </div>
+                </div>
+
+                {review.agentName || review.sourceType ? (
+                  <div className="mt-5 rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      Provenance
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {review.agentName ? (
+                        <span className="badge bg-white/[0.03] text-slate-200">
+                          Agent: {review.agentName}
+                        </span>
+                      ) : null}
+                      {review.sourceType ? (
+                        <span className="badge bg-white/[0.03] text-slate-200">
+                          Source: {review.sourceType}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
+                {review.comment ? (
+                  <p className="mt-5 rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4 text-sm leading-6 text-slate-300">
+                    {review.comment}
+                  </p>
+                ) : null}
+              </article>
+            ))
+          )}
         </section>
       </section>
     </main>
