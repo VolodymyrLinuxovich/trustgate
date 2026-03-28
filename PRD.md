@@ -86,7 +86,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Add a test for `GET /rankings` returning `200`
 - [x] Add a test for `GET /rankings` returning an `items` array
 - [x] Add a test for seeded `GET /rankings` responses with no submitted reports
-- [ ] Implement the base `GET /rankings` route using the report store
+- [x] Implement the base `GET /rankings` route using the report store
 - [ ] Add category filtering to `GET /rankings`
 - [ ] Add optional `taskType` filtering to `GET /rankings`
 - [ ] Add `avgStarScore` to ranking items
