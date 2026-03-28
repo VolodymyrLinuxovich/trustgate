@@ -133,6 +133,6 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Add frontend loading and empty states for rankings
 - [x] Add frontend loading and empty states for API detail pages
 - [x] Add frontend environment configuration for the backend base URL
-- [ ] Update the frontend README with local run instructions and backend URL setup
+- [x] Update the frontend README with local run instructions and backend URL setup
 - [ ] Verify the frontend builds after the migration
 - [ ] Make the Vitest suite pass

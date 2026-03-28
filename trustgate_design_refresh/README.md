@@ -1,33 +1,51 @@
-# TrustGate
+# Trustgate Frontend
 
-TrustGate is a trust layer and evaluation harness for AI agents.
-
-## Added upgrades
-- Custom action composer
-- Live policy toggles
-- Prompt injection detection
-- Policy trace view
-- Score breakdowns
-- Session summary metrics
+This Next.js app is the human-facing UI for Trustgate. It reads rankings from the backend API and renders API detail pages with aggregate review stats and recent reviews.
 
 ## Stack
+
 - Next.js
 - React
 - TypeScript
 - Tailwind CSS
-- Supabase
 
-## Setup
-1. Install dependencies:
+## Local Run
+
+1. Install frontend dependencies:
+
    ```bash
+   cd trustgate_design_refresh
    npm install
    ```
-2. Copy `.env.local.example` to `.env.local` and fill in your key.
-3. Run `supabase_schema.sql` in Supabase SQL Editor.
-4. Start the app:
+
+2. Start the backend from the repository root in a separate terminal:
+
    ```bash
    npm run dev
    ```
 
-## Demo
-Use the 3 preset scenarios or create a custom action with JSON.
+   The backend listens on `http://127.0.0.1:3000` by default.
+
+3. Create `trustgate_design_refresh/.env.local` and point the frontend at the backend:
+
+   ```bash
+   TRUSTGATE_BACKEND_BASE_URL=http://127.0.0.1:3000
+   NEXT_PUBLIC_TRUSTGATE_BACKEND_BASE_URL=http://127.0.0.1:3000
+   ```
+
+   `TRUSTGATE_BACKEND_BASE_URL` is used by server-side data fetching.
+   `NEXT_PUBLIC_TRUSTGATE_BACKEND_BASE_URL` is available to client-side code if needed.
+
+4. Start the frontend on a different port so it does not conflict with the backend:
+
+   ```bash
+   npm run dev -- --port 3001
+   ```
+
+5. Open `http://127.0.0.1:3001`.
+
+## Build
+
+```bash
+npm run build
+```
