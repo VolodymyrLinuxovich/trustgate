@@ -118,7 +118,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Add a sample `POST /reports` integration snippet to `INSTALL.md`
 - [x] Add a sample `GET /rankings` response to `INSTALL.md`
 - [x] Add a sample `GET /apis/:apiId` response to `INSTALL.md`
-- [ ] Replace the old action-evaluation types in `trustgate_design_refresh/types` with API review types
+- [x] Replace the old action-evaluation types in `trustgate_design_refresh/types` with API review types
 - [ ] Add frontend API client helpers for `GET /rankings`
 - [ ] Add frontend API client helpers for `GET /apis/:apiId`
 - [ ] Remove or stop using the old Next.js API routes for `evaluate`, `logs`, and `approve`
