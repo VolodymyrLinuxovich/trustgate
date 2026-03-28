@@ -19,6 +19,13 @@ function formatSuccessRate(successRate: number) {
   return `${Math.round(successRate * 100)}%`;
 }
 
+function formatReviewTimestamp(timestamp: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(new Date(timestamp));
+}
+
 export default async function ApiDetailPage({ params }: ApiDetailPageProps) {
   const { apiId } = await params;
   const decodedApiId = decodeURIComponent(apiId);
@@ -144,7 +151,8 @@ export default async function ApiDetailPage({ params }: ApiDetailPageProps) {
           <div>
             <p className="panel-title">Recent reviews</p>
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              Individual review evidence is the next section of this migration.
+              Individual reports stay visible beside the aggregate score so
+              humans can inspect the underlying call outcomes.
             </p>
           </div>
           <Link
@@ -153,6 +161,70 @@ export default async function ApiDetailPage({ params }: ApiDetailPageProps) {
           >
             Back to rankings
           </Link>
+        </section>
+
+        <section className="grid gap-4">
+          {detail.reviews.map((review, index) => (
+            <article key={`${review.timestamp}-${index}`} className="card-soft px-6 py-6">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <p className="text-lg font-semibold text-white">
+                    {review.starScore} / 5 stars
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-slate-400">
+                    {review.taskType}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em]">
+                  <span
+                    className={`badge border-0 ${
+                      review.success
+                        ? "bg-emerald-400/15 text-emerald-200"
+                        : "bg-rose-400/15 text-rose-200"
+                    }`}
+                  >
+                    {review.success ? "Success" : "Failure"}
+                  </span>
+                  <span className="badge bg-white/[0.02] text-slate-300">
+                    {formatReviewTimestamp(review.timestamp)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Latency
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-white">
+                    {review.latencyMs} ms
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Rate limited
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-white">
+                    {review.rateLimited ? "Yes" : "No"}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/6 bg-black/20 px-4 py-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Review category
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-white">
+                    {review.category}
+                  </p>
+                </div>
+              </div>
+
+              {review.comment ? (
+                <p className="mt-5 rounded-2xl border border-white/6 bg-white/[0.02] px-4 py-4 text-sm leading-6 text-slate-300">
+                  {review.comment}
+                </p>
+              ) : null}
+            </article>
+          ))}
         </section>
       </section>
     </main>
