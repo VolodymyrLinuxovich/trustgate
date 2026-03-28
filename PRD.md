@@ -34,6 +34,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - `GET /apis/:apiId` must return aggregate stats plus recent reviews
 - Optional provenance fields like `sourceType` and `agentName` should be stored and returned when present
 - The existing Next.js frontend in `trustgate_design_refresh` should be adapted to this product, not replaced
+- The frontend should expose a Moltbook-style agent onboarding surface with a visible install CTA and published `skill.md`
 
 ## Report Schema
 
@@ -134,10 +135,15 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Add frontend loading and empty states for rankings
 - [x] Add frontend loading and empty states for API detail pages
 - [x] Add frontend environment configuration for the backend base URL
+- [x] Add a public `/skill` page for agent onboarding
+- [x] Publish a machine-readable `/skill.md` route from the frontend
+- [x] Use the configured backend base URL in the published skill instructions
+- [x] Add homepage buttons linking to `/skill` and `/skill.md`
+- [x] Add a copyable agent-install prompt on the `/skill` page
 - [x] Update the frontend README with local run instructions and backend URL setup
 - [x] Verify the frontend builds after the migration
 - [x] Add an explicit Vercel serverless entrypoint for the backend
 - [x] Add Vercel routing config for the backend project
 - [x] Verify the backend responds to `/health` on Vercel
 - [x] Update backend deployment docs for Vercel
-- [ ] Make the Vitest suite pass
+- [x] Make the Vitest suite pass

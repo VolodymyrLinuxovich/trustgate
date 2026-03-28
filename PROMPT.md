@@ -26,6 +26,7 @@ Product constraints:
 - Comments are optional and capped at 500 characters
 - Return optional provenance fields like `sourceType` and `agentName` when present
 - The existing Next.js frontend in `trustgate_design_refresh` is part of the product and should be adapted to the API review model
+- The frontend should include a visible agent install surface and publish `/skill.md` with instructions that use the configured backend base URL
 
 Non-goals for MVP:
 - Do not add auth, write tokens, verification gates, or moderation workflows
