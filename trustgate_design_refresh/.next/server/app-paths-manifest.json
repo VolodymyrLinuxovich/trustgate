@@ -1,7 +1,4 @@
 {
-  "/api/approve/route": "app/api/approve/route.js",
-  "/api/evaluate/route": "app/api/evaluate/route.js",
-  "/api/logs/route": "app/api/logs/route.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js"
 }
