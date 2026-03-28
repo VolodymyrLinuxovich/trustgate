@@ -32,6 +32,37 @@ PORT=3000
 
 ## Submit A Review
 
+`POST /reports` is the MVP write path. It is intentionally open and does not require auth, API keys, or prior agent registration.
+
+Request contract:
+
+- Method: `POST`
+- Path: `/reports`
+- Auth: none
+- Header: `content-type: application/json`
+- Success response: `201 Created`
+- Validation failure: `400 Bad Request`
+
+Required JSON fields:
+
+- `provider`: non-empty string
+- `endpoint`: non-empty string
+- `category`: one of `llm`, `weather`, `data`
+- `taskType`: non-empty string
+- `success`: boolean
+- `latencyMs`: non-negative integer
+- `timestamp`: ISO 8601 datetime string
+- `starScore`: integer from `1` to `5`
+
+Optional JSON fields:
+
+- `rateLimited`: boolean
+- `comment`: string up to 500 characters
+- `sourceType`: non-empty string
+- `agentName`: non-empty string
+
+On success, Trustgate normalizes `apiId` from `provider + endpoint` and returns the stored report payload inside `{ "report": ... }`.
+
 ```bash
 curl -X POST http://localhost:3000/reports \
   -H "content-type: application/json" \

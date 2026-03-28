@@ -114,7 +114,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Add comment generation to `scripts/review-api.ts`
 - [x] Add POST submission to Trustgate in `scripts/review-api.ts`
 - [x] Add one concrete Open-Meteo review flow to `scripts/review-api.ts`
-- [ ] Add the open write API contract to `INSTALL.md`
+- [x] Add the open write API contract to `INSTALL.md`
 - [ ] Add a sample `POST /reports` integration snippet to `INSTALL.md`
 - [ ] Add a sample `GET /rankings` response to `INSTALL.md`
 - [ ] Add a sample `GET /apis/:apiId` response to `INSTALL.md`
