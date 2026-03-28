@@ -127,6 +127,35 @@ describe("in-memory report store", () => {
     ]);
   });
 
+  it("filters rankings by category", async () => {
+    const store = createReportStore();
+
+    await store.createReport(
+      makeReport({
+        category: "weather"
+      })
+    );
+    await store.createReport(
+      makeReport({
+        provider: "CoinDesk",
+        endpoint: "/v1/bpi/currentprice.json",
+        category: "data",
+        taskType: "price-check",
+        timestamp: "2026-03-28T18:00:00Z"
+      })
+    );
+
+    const rankings = await store.listRankings({ category: "weather" });
+
+    expect(rankings).toEqual([
+      expect.objectContaining({
+        apiId: "open-meteo-v1-forecast",
+        category: "weather",
+        reviewCount: 1
+      })
+    ]);
+  });
+
   it("filters rankings by taskType", async () => {
     const store = createReportStore();
 
