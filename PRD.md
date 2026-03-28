@@ -95,7 +95,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Add `medianLatencyMs` to ranking items
 - [x] Add `rateLimitedCount` to ranking items
 - [x] Sort ranking items by average star score descending by default
-- [ ] Add a test for ranking aggregation math
+- [x] Add a test for ranking aggregation math
 - [ ] Add a test for `GET /apis/:apiId` returning `200`
 - [ ] Add a test for `GET /apis/:apiId` returning `api` and `reviews`
 - [ ] Add a test for seeded API detail responses with no submitted reports
