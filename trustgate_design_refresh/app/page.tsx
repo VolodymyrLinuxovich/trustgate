@@ -5,8 +5,13 @@ export const dynamic = "force-dynamic";
 
 const categories: ApiCategory[] = ["llm", "weather", "data"];
 const defaultBackendBaseUrl = "http://127.0.0.1:3000";
+const categoryTitles: Record<ApiCategory, string> = {
+  llm: "LLM APIs",
+  weather: "Weather APIs",
+  data: "Data APIs"
+};
 
-async function loadRankingSummary() {
+async function loadHomepageData() {
   const rankingResponses = await Promise.allSettled(
     categories.map((category) =>
       getRankings({
@@ -16,20 +21,38 @@ async function loadRankingSummary() {
     )
   );
 
-  return rankingResponses.reduce(
-    (summary, response, index) => {
-      if (response.status === "fulfilled") {
-        summary.loadedCategories += 1;
-        summary.apiCount += response.value.items.length;
-        summary.reviewCount += response.value.items.reduce(
+  const categorySections = rankingResponses.map((response, index) => {
+    const category = categories[index];
+
+    if (response.status === "fulfilled") {
+      return {
+        category,
+        items: response.value.items,
+        error: null
+      };
+    }
+
+    return {
+      category,
+      items: [],
+      error: "Unable to load rankings for this category."
+    };
+  });
+
+  const summary = categorySections.reduce(
+    (currentSummary, section) => {
+      if (!section.error) {
+        currentSummary.loadedCategories += 1;
+        currentSummary.apiCount += section.items.length;
+        currentSummary.reviewCount += section.items.reduce(
           (total, item) => total + item.reviewCount,
           0
         );
       } else {
-        summary.failedCategories.push(categories[index]);
+        currentSummary.failedCategories.push(section.category);
       }
 
-      return summary;
+      return currentSummary;
     },
     {
       loadedCategories: 0,
@@ -38,10 +61,16 @@ async function loadRankingSummary() {
       failedCategories: [] as ApiCategory[]
     }
   );
+
+  return {
+    categorySections,
+    summary
+  };
 }
 
 export default async function HomePage() {
-  const rankingSummary = await loadRankingSummary();
+  const homepageData = await loadHomepageData();
+  const rankingSummary = homepageData.summary;
   const summaryCards = [
     {
       title: "Catalog coverage",
@@ -139,6 +168,68 @@ export default async function HomePage() {
               </p>
             </article>
           ))}
+        </section>
+
+        <section className="space-y-4">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="panel-title">Category rankings</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">
+                Browse Trustgate by API category
+              </h2>
+            </div>
+            <p className="max-w-md text-sm leading-6 text-slate-400">
+              Trustgate groups rankings into the MVP categories so humans can scan
+              comparable APIs before drilling into a provider.
+            </p>
+          </div>
+
+          <div className="grid gap-4 xl:grid-cols-3">
+            {homepageData.categorySections.map((section) => (
+              <section key={section.category} className="card-soft h-full px-6 py-6">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="panel-title">{section.category}</p>
+                    <h3 className="mt-2 text-xl font-semibold text-white">
+                      {categoryTitles[section.category]}
+                    </h3>
+                  </div>
+                  <span className="badge bg-white/[0.02] text-slate-200">
+                    {section.items.length} APIs
+                  </span>
+                </div>
+
+                {section.error ? (
+                  <p className="mt-6 rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-200">
+                    {section.error}
+                  </p>
+                ) : (
+                  <div className="mt-6 space-y-3">
+                    {section.items.map((item, index) => (
+                      <article
+                        key={item.apiId}
+                        className="rounded-[24px] border border-white/8 bg-black/20 px-4 py-4"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <p className="text-sm font-semibold text-white">
+                              {item.provider}
+                            </p>
+                            <p className="mt-1 text-sm leading-6 text-slate-400">
+                              {item.endpoint}
+                            </p>
+                          </div>
+                          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+                            #{index + 1}
+                          </span>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
+            ))}
+          </div>
         </section>
       </section>
     </main>

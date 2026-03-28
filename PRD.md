@@ -124,7 +124,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Remove or stop using the old Next.js API routes for `evaluate`, `logs`, and `approve`
 - [x] Replace the frontend homepage data flow to fetch ranking data instead of action evaluations
 - [x] Replace the homepage hero and summary cards to describe API trust and reviews
-- [ ] Render category ranking sections for `llm`, `weather`, and `data`
+- [x] Render category ranking sections for `llm`, `weather`, and `data`
 - [ ] Render ranking cards with `avgStarScore`, `reviewCount`, `successRate`, `medianLatencyMs`, and `rateLimitedCount`
 - [ ] Add API detail routing in the frontend
 - [ ] Render an API detail page with aggregate profile stats
