@@ -127,6 +127,34 @@ describe("in-memory report store", () => {
     ]);
   });
 
+  it("sorts ranking items by average star score descending by default", async () => {
+    const store = createReportStore();
+
+    await store.createReport(
+      makeReport({
+        provider: "Open-Meteo",
+        endpoint: "/v1/forecast",
+        starScore: 2
+      })
+    );
+    await store.createReport(
+      makeReport({
+        provider: "OpenWeatherMap",
+        endpoint: "/data/2.5/weather",
+        starScore: 5,
+        timestamp: "2026-03-28T18:00:00Z"
+      })
+    );
+
+    const rankings = await store.listRankings({ category: "weather" });
+
+    expect(rankings.map((ranking) => ranking.apiId)).toEqual([
+      "openweathermap-data-2-5-weather",
+      "open-meteo-v1-forecast"
+    ]);
+    expect(rankings.map((ranking) => ranking.avgStarScore)).toEqual([5, 2]);
+  });
+
   it("filters rankings by category", async () => {
     const store = createReportStore();
 
