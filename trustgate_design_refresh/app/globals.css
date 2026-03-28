@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply min-h-screen bg-[#050816] text-slate-100 antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(45, 212, 191, 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(59, 130, 246, 0.16), transparent 22%),
+    linear-gradient(180deg, #07101f 0%, #050816 48%, #04060f 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.28), transparent 85%);
+}
+
+.card {
+  @apply rounded-[28px] border border-white/10 bg-white/[0.04] backdrop-blur-xl shadow-[0_25px_80px_rgba(3,7,18,0.45)];
+}
+
+.card-soft {
+  @apply rounded-3xl border border-white/5 bg-white/[0.03] backdrop-blur-md;
+}
+
+.badge {
+  @apply inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em];
+}
+
+.panel-title {
+  @apply text-sm font-semibold uppercase tracking-[0.22em] text-slate-400;
+}
+
+.metric-value {
+  @apply text-4xl font-semibold tracking-tight text-white;
+}
+
+.glow-ring {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(34, 211, 238, 0.12);
+}
