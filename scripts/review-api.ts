@@ -100,6 +100,19 @@ export function getUsageText() {
   ].join("\n");
 }
 
+export async function measureLatency<T>(
+  operation: () => Promise<T> | T
+): Promise<{ result: T; latencyMs: number }> {
+  const startedAt = performance.now();
+  const result = await operation();
+  const latencyMs = Math.max(0, Math.round(performance.now() - startedAt));
+
+  return {
+    result,
+    latencyMs
+  };
+}
+
 function isMainModule() {
   return process.argv[1] !== undefined && pathToFileURL(process.argv[1]).href === import.meta.url;
 }

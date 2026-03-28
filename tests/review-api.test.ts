@@ -73,6 +73,27 @@ describe("review-api script contract", () => {
     ).toThrow("Flag --task-type requires a non-empty value.");
   });
 
+  it("exports a latency helper that measures an API call duration", async () => {
+    const module = (await import("../scripts/review-api.js")) as Record<
+      string,
+      unknown
+    >;
+    const measureLatency = module.measureLatency as
+      | (<T>(operation: () => Promise<T> | T) => Promise<{ result: T; latencyMs: number }>)
+      | undefined;
+
+    expect(typeof measureLatency).toBe("function");
+
+    const measured = await measureLatency!(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      return "ok";
+    });
+
+    expect(measured.result).toBe("ok");
+    expect(Number.isInteger(measured.latencyMs)).toBe(true);
+    expect(measured.latencyMs).toBeGreaterThanOrEqual(10);
+  });
+
   it("exports a review scoring helper that returns integer star scores", async () => {
     const module = (await import("../scripts/review-api.js")) as Record<
       string,
