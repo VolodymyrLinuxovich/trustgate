@@ -219,6 +219,67 @@ describe("Trustgate API", () => {
     });
   });
 
+  it("returns only rankings for the requested taskType", async () => {
+    const filteredApp = buildApp();
+
+    try {
+      await filteredApp.inject({
+        method: "POST",
+        url: "/reports",
+        payload: {
+          provider: "Open-Meteo",
+          endpoint: "/v1/forecast",
+          category: "weather",
+          taskType: "daily-forecast",
+          success: true,
+          latencyMs: 412,
+          timestamp: "2026-03-28T17:00:00Z",
+          starScore: 5
+        }
+      });
+      await filteredApp.inject({
+        method: "POST",
+        url: "/reports",
+        payload: {
+          provider: "Open-Meteo",
+          endpoint: "/v1/forecast",
+          category: "weather",
+          taskType: "hourly-forecast",
+          success: true,
+          latencyMs: 398,
+          timestamp: "2026-03-28T18:00:00Z",
+          starScore: 4
+        }
+      });
+
+      const response = await filteredApp.inject({
+        method: "GET",
+        url: "/rankings?category=weather&taskType=hourly-forecast"
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.json()).toEqual({
+        category: "weather",
+        taskType: "hourly-forecast",
+        items: [
+          {
+            apiId: "open-meteo-v1-forecast",
+            provider: "Open-Meteo",
+            endpoint: "/v1/forecast",
+            category: "weather",
+            avgStarScore: 4,
+            reviewCount: 1,
+            successRate: 1,
+            medianLatencyMs: 398,
+            rateLimitedCount: 0
+          }
+        ]
+      });
+    } finally {
+      await filteredApp.close();
+    }
+  });
+
   it("rejects an invalid rankings query", async () => {
     const response = await app.inject({
       method: "GET",
