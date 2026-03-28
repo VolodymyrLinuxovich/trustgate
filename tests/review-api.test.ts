@@ -10,6 +10,69 @@ describe("review-api script contract", () => {
     expect(typeof module.parseReviewArgs).toBe("function");
   });
 
+  it("parses the required CLI arguments", async () => {
+    const module = (await import("../scripts/review-api.js")) as Record<
+      string,
+      unknown
+    >;
+    const parseReviewArgs = module.parseReviewArgs as
+      | ((argv: string[]) => unknown)
+      | undefined;
+
+    expect(
+      parseReviewArgs?.([
+        "--provider",
+        "Open-Meteo",
+        "--endpoint",
+        "/v1/forecast",
+        "--category",
+        "weather",
+        "--task-type",
+        "daily-forecast"
+      ])
+    ).toEqual({
+      provider: "Open-Meteo",
+      endpoint: "/v1/forecast",
+      category: "weather",
+      taskType: "daily-forecast",
+      trustgateBaseUrl: "http://localhost:3000"
+    });
+  });
+
+  it("rejects invalid CLI arguments", async () => {
+    const module = (await import("../scripts/review-api.js")) as Record<
+      string,
+      unknown
+    >;
+    const parseReviewArgs = module.parseReviewArgs as
+      | ((argv: string[]) => unknown)
+      | undefined;
+
+    expect(() =>
+      parseReviewArgs?.([
+        "--provider",
+        "Open-Meteo",
+        "--endpoint",
+        "/v1/forecast",
+        "--category",
+        "finance",
+        "--task-type",
+        "daily-forecast"
+      ])
+    ).toThrow();
+
+    expect(() =>
+      parseReviewArgs?.([
+        "--provider",
+        "Open-Meteo",
+        "--endpoint",
+        "/v1/forecast",
+        "--category",
+        "weather"
+      ])
+    ).toThrow("Flag --task-type requires a non-empty value.");
+  });
+
   it("exports a review scoring helper that returns integer star scores", async () => {
     const module = (await import("../scripts/review-api.js")) as Record<
       string,
