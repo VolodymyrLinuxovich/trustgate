@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const reportCategorySchema = z.enum(["llm", "weather", "data"]);
+export const reportCategorySchema = z.enum(["llm", "weather", "data"]);
 
 const optionalTrimmedString = z.string().trim().min(1);
 
@@ -17,6 +17,11 @@ export const reportInputSchema = z.object({
   comment: z.string().trim().max(500).optional(),
   sourceType: optionalTrimmedString.optional(),
   agentName: optionalTrimmedString.optional()
+});
+
+export const rankingsQuerySchema = z.object({
+  category: reportCategorySchema,
+  taskType: optionalTrimmedString.optional()
 });
 
 export function normalizeApiId(provider: string, endpoint: string) {
@@ -38,3 +43,5 @@ export function parseReportInput(input: unknown) {
 
 export type ReportInput = z.input<typeof reportInputSchema>;
 export type ParsedReport = ReturnType<typeof parseReportInput>;
+export type ReportCategory = z.infer<typeof reportCategorySchema>;
+export type RankingsQuery = z.infer<typeof rankingsQuerySchema>;

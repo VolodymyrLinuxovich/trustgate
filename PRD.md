@@ -19,7 +19,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Bootstrap a TypeScript Fastify service with test and build tooling
 - [x] Define the review schema and normalize `apiId` from `provider + endpoint`
 - [x] Implement `POST /reports` with validation and persistence wiring
-- [ ] Implement `GET /rankings` with category and optional task filtering
+- [x] Implement `GET /rankings` with category and optional task filtering
 - [ ] Implement `GET /apis/:apiId` with aggregated stats and recent reviews
 - [ ] Add seeded data for the nine initial demo APIs
 - [ ] Add `scripts/review-api.ts` to run a real API call and submit a review

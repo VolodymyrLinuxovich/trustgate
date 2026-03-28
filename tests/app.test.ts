@@ -5,13 +5,19 @@ import type { ParsedReport } from "../src/reports.js";
 describe("Trustgate API", () => {
   let app: ReturnType<typeof buildApp>;
   const createReport = vi.fn<(report: ParsedReport) => Promise<ParsedReport>>();
+  const listReports = vi.fn<
+    (filters: { category: "llm" | "weather" | "data"; taskType?: string }) => Promise<ParsedReport[]>
+  >();
 
   beforeEach(() => {
     createReport.mockReset();
+    listReports.mockReset();
     createReport.mockImplementation(async (report) => report);
+    listReports.mockResolvedValue([]);
     app = buildApp({
       reportStore: {
-        createReport
+        createReport,
+        listReports
       }
     });
   });
@@ -86,30 +92,103 @@ describe("Trustgate API", () => {
   });
 
   it("returns rankings grouped by API", async () => {
+    listReports.mockResolvedValue([
+      {
+        apiId: "open-meteo-v1-forecast",
+        provider: "Open-Meteo",
+        endpoint: "/v1/forecast",
+        category: "weather",
+        taskType: "daily-forecast",
+        success: true,
+        latencyMs: 320,
+        timestamp: "2026-03-28T17:00:00Z",
+        starScore: 5
+      },
+      {
+        apiId: "open-meteo-v1-forecast",
+        provider: "Open-Meteo",
+        endpoint: "/v1/forecast",
+        category: "weather",
+        taskType: "daily-forecast",
+        success: false,
+        latencyMs: 680,
+        timestamp: "2026-03-28T18:00:00Z",
+        starScore: 4
+      },
+      {
+        apiId: "weatherapi-com-v1-current-json",
+        provider: "WeatherAPI.com",
+        endpoint: "/v1/current.json",
+        category: "weather",
+        taskType: "daily-forecast",
+        success: true,
+        latencyMs: 290,
+        timestamp: "2026-03-28T16:00:00Z",
+        starScore: 3
+      }
+    ]);
+
     const response = await app.inject({
       method: "GET",
       url: "/rankings?category=weather"
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual(
-      expect.objectContaining({
-        items: expect.any(Array)
-      })
-    );
+    expect(listReports).toHaveBeenCalledWith({ category: "weather" });
+    expect(response.json()).toEqual({
+      category: "weather",
+      items: [
+        {
+          apiId: "open-meteo-v1-forecast",
+          provider: "Open-Meteo",
+          endpoint: "/v1/forecast",
+          category: "weather",
+          averageStarScore: 4.5,
+          reportCount: 2,
+          successRate: 0.5,
+          averageLatencyMs: 500,
+          latestTimestamp: "2026-03-28T18:00:00Z"
+        },
+        {
+          apiId: "weatherapi-com-v1-current-json",
+          provider: "WeatherAPI.com",
+          endpoint: "/v1/current.json",
+          category: "weather",
+          averageStarScore: 3,
+          reportCount: 1,
+          successRate: 1,
+          averageLatencyMs: 290,
+          latestTimestamp: "2026-03-28T16:00:00Z"
+        }
+      ]
+    });
   });
 
-  it("returns an API detail page with reviews", async () => {
+  it("supports optional task filtering for rankings", async () => {
     const response = await app.inject({
       method: "GET",
-      url: "/apis/open-meteo-v1-forecast"
+      url: "/rankings?category=weather&taskType=daily-forecast"
     });
 
     expect(response.statusCode).toBe(200);
+    expect(listReports).toHaveBeenCalledWith({
+      category: "weather",
+      taskType: "daily-forecast"
+    });
+  });
+
+  it("rejects an invalid rankings query", async () => {
+    const response = await app.inject({
+      method: "GET",
+      url: "/rankings?category=finance"
+    });
+
+    expect(response.statusCode).toBe(400);
+    expect(listReports).not.toHaveBeenCalled();
     expect(response.json()).toEqual(
       expect.objectContaining({
-        api: expect.any(Object),
-        reviews: expect.any(Array)
+        error: "Invalid rankings query",
+        issues: expect.any(Array)
       })
     );
   });
