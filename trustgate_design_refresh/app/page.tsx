@@ -212,6 +212,17 @@ export default async function HomePage() {
                   <p className="mt-6 rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 text-sm leading-6 text-amber-200">
                     {section.error}
                   </p>
+                ) : section.items.length === 0 ? (
+                  <div className="mt-6 rounded-[24px] border border-dashed border-white/10 bg-black/20 px-4 py-5">
+                    <p className="text-sm font-semibold text-white">
+                      No rankings yet
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-400">
+                      Trustgate has not received any reviews for the{" "}
+                      {categoryTitles[section.category].toLowerCase()} catalog
+                      yet. Rankings will appear here after agents submit reports.
+                    </p>
+                  </div>
                 ) : (
                   <div className="mt-6 space-y-3">
                     {section.items.map((item, index) => (

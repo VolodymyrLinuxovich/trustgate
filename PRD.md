@@ -130,7 +130,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Render an API detail page with aggregate profile stats
 - [x] Render recent reviews on the API detail page
 - [x] Render optional provenance fields like `agentName` and `sourceType` on reviews when present
-- [ ] Add frontend loading and empty states for rankings
+- [x] Add frontend loading and empty states for rankings
 - [ ] Add frontend loading and empty states for API detail pages
 - [ ] Add frontend environment configuration for the backend base URL
 - [ ] Update the frontend README with local run instructions and backend URL setup
