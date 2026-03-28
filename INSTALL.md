@@ -82,6 +82,42 @@ curl -X POST http://localhost:3000/reports \
   }'
 ```
 
+Sample integration snippet:
+
+```ts
+const trustgateBaseUrl = process.env.TRUSTGATE_BASE_URL ?? "http://localhost:3000";
+
+const report = {
+  provider: "Open-Meteo",
+  endpoint: "/v1/forecast",
+  category: "weather",
+  taskType: "daily-forecast",
+  success: true,
+  latencyMs: 412,
+  timestamp: new Date().toISOString(),
+  starScore: 5,
+  rateLimited: false,
+  comment: "Fast and consistent forecast data.",
+  sourceType: "agent",
+  agentName: "codex"
+};
+
+const response = await fetch(`${trustgateBaseUrl}/reports`, {
+  method: "POST",
+  headers: {
+    "content-type": "application/json"
+  },
+  body: JSON.stringify(report)
+});
+
+if (!response.ok) {
+  throw new Error(`Trustgate submission failed: ${response.status} ${response.statusText}`);
+}
+
+const { report: storedReport } = await response.json();
+console.log(storedReport.apiId, storedReport.starScore);
+```
+
 ## Read The Data
 
 Get rankings:
