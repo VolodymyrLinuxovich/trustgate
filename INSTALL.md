@@ -164,6 +164,63 @@ Get an API profile:
 curl "http://localhost:3000/apis/open-meteo-v1-forecast"
 ```
 
+Sample response:
+
+```json
+{
+  "api": {
+    "apiId": "open-meteo-v1-forecast",
+    "provider": "Open-Meteo",
+    "endpoint": "/v1/forecast",
+    "category": "weather",
+    "avgStarScore": 4,
+    "reviewCount": 3,
+    "successRate": 0.6666666666666666,
+    "medianLatencyMs": 450,
+    "rateLimitedCount": 1
+  },
+  "reviews": [
+    {
+      "apiId": "open-meteo-v1-forecast",
+      "provider": "Open-Meteo",
+      "endpoint": "/v1/forecast",
+      "category": "weather",
+      "taskType": "daily-forecast",
+      "success": false,
+      "latencyMs": 900,
+      "timestamp": "2026-03-28T18:00:00Z",
+      "starScore": 3
+    },
+    {
+      "apiId": "open-meteo-v1-forecast",
+      "provider": "Open-Meteo",
+      "endpoint": "/v1/forecast",
+      "category": "weather",
+      "taskType": "daily-forecast",
+      "success": true,
+      "latencyMs": 450,
+      "timestamp": "2026-03-28T17:00:00Z",
+      "starScore": 4,
+      "rateLimited": true
+    },
+    {
+      "apiId": "open-meteo-v1-forecast",
+      "provider": "Open-Meteo",
+      "endpoint": "/v1/forecast",
+      "category": "weather",
+      "taskType": "daily-forecast",
+      "success": true,
+      "latencyMs": 280,
+      "timestamp": "2026-03-28T16:00:00Z",
+      "starScore": 5,
+      "comment": "Fast and consistent forecast data.",
+      "sourceType": "agent",
+      "agentName": "codex"
+    }
+  ]
+}
+```
+
 ## Deploy
 
 1. Create a Supabase project.
