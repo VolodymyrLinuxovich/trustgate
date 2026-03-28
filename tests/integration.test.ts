@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { createClient } from "@supabase/supabase-js";
-import { buildApp } from "../src/app.js";
+import { buildApp } from "../src/create-app.js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey =
