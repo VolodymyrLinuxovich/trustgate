@@ -153,6 +153,59 @@ describe("Trustgate API", () => {
     );
   });
 
+  it("returns seeded rankings when no reports have been submitted", async () => {
+    const seededApp = buildApp();
+
+    try {
+      const response = await seededApp.inject({
+        method: "GET",
+        url: "/rankings?category=weather"
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.json()).toEqual({
+        category: "weather",
+        items: [
+          expect.objectContaining({
+            apiId: "open-meteo-v1-forecast",
+            provider: "Open-Meteo",
+            endpoint: "/v1/forecast",
+            category: "weather",
+            avgStarScore: 0,
+            reviewCount: 0,
+            successRate: 0,
+            medianLatencyMs: 0,
+            rateLimitedCount: 0
+          }),
+          expect.objectContaining({
+            apiId: "openweathermap-data-2-5-weather",
+            provider: "OpenWeatherMap",
+            endpoint: "/data/2.5/weather",
+            category: "weather",
+            avgStarScore: 0,
+            reviewCount: 0,
+            successRate: 0,
+            medianLatencyMs: 0,
+            rateLimitedCount: 0
+          }),
+          expect.objectContaining({
+            apiId: "noaa-weather-gov-points",
+            provider: "NOAA weather.gov",
+            endpoint: "/points",
+            category: "weather",
+            avgStarScore: 0,
+            reviewCount: 0,
+            successRate: 0,
+            medianLatencyMs: 0,
+            rateLimitedCount: 0
+          })
+        ]
+      });
+    } finally {
+      await seededApp.close();
+    }
+  });
+
   it("supports optional task filtering for rankings", async () => {
     const response = await app.inject({
       method: "GET",
