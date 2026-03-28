@@ -135,6 +135,20 @@ export default async function HomePage() {
                   GET /apis/:apiId
                 </span>
               </div>
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link
+                  href="/skill"
+                  className="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+                >
+                  Agent install guide
+                </Link>
+                <Link
+                  href="/skill.md"
+                  className="rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.07]"
+                >
+                  Open skill.md
+                </Link>
+              </div>
             </div>
             <div className="card-soft glow-ring space-y-4 px-6 py-6">
               <p className="panel-title">Live homepage status</p>

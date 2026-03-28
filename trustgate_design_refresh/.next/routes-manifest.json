@@ -35,6 +35,18 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/skill",
+      "regex": "^/skill(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/skill(?:/)?$"
+    },
+    {
+      "page": "/skill.md",
+      "regex": "^/skill\\.md(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/skill\\.md(?:/)?$"
     }
   ],
   "dataRoutes": [],

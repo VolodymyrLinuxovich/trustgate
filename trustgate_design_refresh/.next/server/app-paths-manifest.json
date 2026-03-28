@@ -1,4 +1,7 @@
 {
+  "/skill.md/route": "app/skill.md/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/skill/page": "app/skill/page.js",
   "/apis/[apiId]/page": "app/apis/[apiId]/page.js",
   "/page": "app/page.js"
 }
