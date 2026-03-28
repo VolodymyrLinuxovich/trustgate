@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api"
+    },
+    {
+      "source": "/reports",
+      "destination": "/api"
+    },
+    {
+      "source": "/rankings",
+      "destination": "/api"
+    },
+    {
+      "source": "/apis/:apiId",
+      "destination": "/api"
+    }
+  ]
+}
