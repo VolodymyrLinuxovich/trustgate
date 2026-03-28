@@ -216,6 +216,25 @@ describe("in-memory report store", () => {
     });
   });
 
+  it("returns seeded API detail data when a seeded API has no submitted reports", async () => {
+    const store = createReportStore();
+
+    await expect(store.getApiDetail("open-meteo-v1-forecast")).resolves.toEqual({
+      api: {
+        apiId: "open-meteo-v1-forecast",
+        provider: "Open-Meteo",
+        endpoint: "/v1/forecast",
+        category: "weather",
+        avgStarScore: 0,
+        reviewCount: 0,
+        successRate: 0,
+        medianLatencyMs: 0,
+        rateLimitedCount: 0
+      },
+      reviews: []
+    });
+  });
+
   it("returns null for missing API detail", async () => {
     const store = createReportStore();
 

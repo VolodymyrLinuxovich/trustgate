@@ -1,6 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import type { ParsedReport, ReportCategory } from "./reports.js";
-import { listSeededApiRecordsByCategory } from "./seeded-apis.js";
+import {
+  getSeededApiRecord,
+  listSeededApiRecordsByCategory
+} from "./seeded-apis.js";
 
 export type StoredReport = ParsedReport;
 export interface ReportListFilters {
@@ -146,11 +149,30 @@ class InMemoryReportStore implements ReportStore {
       );
   }
 
-  async getApiDetail(_apiId: string): Promise<ApiDetail | null> {
-    const reports = await this.listReportsByApiId(_apiId);
+  async getApiDetail(apiId: string): Promise<ApiDetail | null> {
+    const reports = await this.listReportsByApiId(apiId);
 
     if (reports.length === 0) {
-      return null;
+      const seededApiRecord = getSeededApiRecord(apiId);
+
+      if (!seededApiRecord) {
+        return null;
+      }
+
+      return {
+        api: {
+          apiId: seededApiRecord.apiId,
+          provider: seededApiRecord.provider,
+          endpoint: seededApiRecord.endpoint,
+          category: seededApiRecord.category,
+          avgStarScore: 0,
+          reviewCount: 0,
+          successRate: 0,
+          medianLatencyMs: 0,
+          rateLimitedCount: 0
+        },
+        reviews: []
+      };
     }
 
     const [firstReport] = reports;
