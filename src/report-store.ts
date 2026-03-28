@@ -42,6 +42,17 @@ export interface ReportStore {
   listReportsByApiId(apiId: string): Promise<StoredReport[]>;
 }
 
+function calculateMedian(values: number[]) {
+  const sortedValues = [...values].sort((left, right) => left - right);
+  const midpoint = Math.floor(sortedValues.length / 2);
+
+  if (sortedValues.length % 2 === 1) {
+    return sortedValues[midpoint]!;
+  }
+
+  return (sortedValues[midpoint - 1]! + sortedValues[midpoint]!) / 2;
+}
+
 class InMemoryReportStore implements ReportStore {
   private readonly reports: StoredReport[] = [];
 
@@ -58,8 +69,66 @@ class InMemoryReportStore implements ReportStore {
     );
   }
 
-  async listRankings(_filters: ReportListFilters): Promise<RankingEntry[]> {
-    throw new Error("listRankings is not implemented");
+  async listRankings(filters: ReportListFilters): Promise<RankingEntry[]> {
+    const reports = await this.listReports(filters);
+    const rankings = new Map<
+      string,
+      {
+        apiId: string;
+        provider: string;
+        endpoint: string;
+        category: ReportCategory;
+        starScoreTotal: number;
+        reviewCount: number;
+        successCount: number;
+        latencies: number[];
+        rateLimitedCount: number;
+      }
+    >();
+
+    for (const report of reports) {
+      const existing = rankings.get(report.apiId);
+
+      if (existing) {
+        existing.starScoreTotal += report.starScore;
+        existing.reviewCount += 1;
+        existing.successCount += report.success ? 1 : 0;
+        existing.latencies.push(report.latencyMs);
+        existing.rateLimitedCount += report.rateLimited ? 1 : 0;
+        continue;
+      }
+
+      rankings.set(report.apiId, {
+        apiId: report.apiId,
+        provider: report.provider,
+        endpoint: report.endpoint,
+        category: report.category,
+        starScoreTotal: report.starScore,
+        reviewCount: 1,
+        successCount: report.success ? 1 : 0,
+        latencies: [report.latencyMs],
+        rateLimitedCount: report.rateLimited ? 1 : 0
+      });
+    }
+
+    return Array.from(rankings.values())
+      .map((ranking) => ({
+        apiId: ranking.apiId,
+        provider: ranking.provider,
+        endpoint: ranking.endpoint,
+        category: ranking.category,
+        avgStarScore: ranking.starScoreTotal / ranking.reviewCount,
+        reviewCount: ranking.reviewCount,
+        successRate: ranking.successCount / ranking.reviewCount,
+        medianLatencyMs: calculateMedian(ranking.latencies),
+        rateLimitedCount: ranking.rateLimitedCount
+      }))
+      .sort(
+        (left, right) =>
+          right.avgStarScore - left.avgStarScore ||
+          right.reviewCount - left.reviewCount ||
+          left.apiId.localeCompare(right.apiId)
+      );
   }
 
   async getApiDetail(_apiId: string): Promise<ApiDetail | null> {

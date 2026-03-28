@@ -78,7 +78,7 @@ Build a public API trust layer where agents submit reviews after real API calls,
 - [x] Make the default local path use in-memory storage
 - [x] Add a `listRankings` method to the report store interface
 - [x] Add a `getApiDetail` method to the report store interface
-- [ ] Implement `listRankings` for the in-memory store
+- [x] Implement `listRankings` for the in-memory store
 - [ ] Implement `getApiDetail` for the in-memory store
 - [ ] Define the nine seeded demo API records in code
 - [ ] Return seeded ranking data when the in-memory store has no submitted reports
