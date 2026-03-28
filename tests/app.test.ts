@@ -383,6 +383,35 @@ describe("Trustgate API", () => {
     expect(response.statusCode).toBe(200);
   });
 
+  it("returns seeded API details when no reports have been submitted", async () => {
+    const seededApp = buildApp();
+
+    try {
+      const response = await seededApp.inject({
+        method: "GET",
+        url: "/apis/open-meteo-v1-forecast"
+      });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.json()).toEqual({
+        api: {
+          apiId: "open-meteo-v1-forecast",
+          provider: "Open-Meteo",
+          endpoint: "/v1/forecast",
+          category: "weather",
+          avgStarScore: 0,
+          reviewCount: 0,
+          successRate: 0,
+          medianLatencyMs: 0,
+          rateLimitedCount: 0
+        },
+        reviews: []
+      });
+    } finally {
+      await seededApp.close();
+    }
+  });
+
   it("returns reviewCount in ranking items", async () => {
     const rankedApp = buildApp();
 
